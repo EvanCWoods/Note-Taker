@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const {v4: uuid4} = require('uuid');
 const path = require('path');
 const DATABASE = require('./db/db.json');
@@ -33,18 +34,39 @@ app.get("/api/notes", (req, res) => {
 
 // Add notes to the database
 app.post("/api/notes", (req, res) => {
-    const {title, content} = req.body;
+    console.log(req.method);
 
-    if (title && content) {
+    const {title, text} = req.body;
+
+    if (title && text) {
         const newNote = {
             title,
-            content,
+            text,
             id: uuid4()
         }
         const response = {
             status: "Success",
-            body: newNote
+            body: newNote,
         }
+        console.log(response);
+        res.status(201).json(response);
+        fs.readFile("./db/db.json", (err, data) => {
+            if (err) {
+                console.error(err);
+            } else {
+                arr = JSON.parse(data);
+                arr.push(response.body);
+                fs.writeFile("./db/db.json", JSON.stringify(arr), err => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log("CHANGED FILE CONTENT");
+                    }
+                })
+            }
+        })
+    } else {
+        res.status(500).json("Error posting your note");
     }
     console.log("POSTING TO API/NOTES")
 })
