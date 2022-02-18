@@ -2,27 +2,27 @@ const express = require('express');
 const fs = require('fs');
 const {v4: uuid4} = require('uuid');
 const path = require('path');
-const DATABASE = require('./db/db.json');
+const DATABASE = require('./Develop/db/db.json');
 
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 // Middlewear
-app.use(express.static("public"));
+app.use(express.static("./Develop/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
 // Base url handling & showing landing page
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public/index.html"))
+    res.sendFile(path.join(__dirname, "./Develop/public/index.html"))
 });
 
 
 // /notes url handling & showing notes page
 app.get("/notes", (req, res) => {
-    res.sendFile(path.join(__dirname, "public/notes.html"));
+    res.sendFile(path.join(__dirname, "./Develop/public/notes.html"));
 });
 
 
@@ -50,13 +50,13 @@ app.post("/api/notes", (req, res) => {
         }
         console.log(response);
         res.status(201).json(response);
-        fs.readFile("./db/db.json", (err, data) => {
+        fs.readFile("./Develop/db/db.json", (err, data) => {
             if (err) {
                 console.error(err);
             } else {
                 arr = JSON.parse(data);
                 arr.push(response.body);
-                fs.writeFile("./db/db.json", JSON.stringify(arr), err => {
+                fs.writeFile("./Develop/db/db.json", JSON.stringify(arr), err => {
                     if (err) {
                         console.error(err);
                     } else {
@@ -74,14 +74,14 @@ app.post("/api/notes", (req, res) => {
 
 // Add delete functionality
 app.delete("/api/notes/:id", (req, res) => {
-    let notes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+    let notes = JSON.parse(fs.readFileSync("./Develop/db/db.json", "utf8"));
     let noteId = (req.params.id).toString();
 
     notes = notes.filter(selected =>{
         return selected.id != noteId;
     })
 
-    fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+    fs.writeFileSync("./Develop/db/db.json", JSON.stringify(notes));
     res.json(notes);
 });
 
