@@ -44,6 +44,9 @@ To Install and run this application yourself, follow the below step(s).
 ## Usage
 Install the dependancies using the above instrucitons and run the app using `npm start`.
 
+The deployed application can be found at the following URL:    
+https://evan-woods-note-taker.herokuapp.com
+
 
 ## Contribute
 This project is done and does not require any further contributions.
