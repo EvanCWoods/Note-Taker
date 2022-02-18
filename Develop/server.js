@@ -69,7 +69,22 @@ app.post("/api/notes", (req, res) => {
         res.status(500).json("Error posting your note");
     }
     console.log("POSTING TO API/NOTES")
-})
+});
+
+
+// Add delete functionality
+app.delete("/api/notes/:id", (req, res) => {
+    let notes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+    let noteId = (req.params.id).toString();
+
+    notes = notes.filter(selected =>{
+        return selected.id != noteId;
+    })
+
+    fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+    res.json(notes);
+});
+
 
 // Set up the server on port 3001
 app.listen(PORT, () => {
