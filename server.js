@@ -28,7 +28,13 @@ app.get("/notes", (req, res) => {
 
 // Return db.json data at /api/Notes
 app.get("/api/notes", (req, res) => {
-    return res.json(DATABASE);
+    fs.readFile("./Develop/db/db.json", (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            return res.json(JSON.parse(data));
+        }
+    })
 })
 
 
